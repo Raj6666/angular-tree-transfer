@@ -1,0 +1,9 @@
+<div class="error">
+  <div class="img">
+    <img src="./assets/images/error/403.svg" alt="">
+  </div>
+  <div class="errorContent">
+    <p>抱歉，{{text}}</p>
+    <button *ngIf="isShowButton" nz-button [nzSize]="'default'" nzType="primary" (click)="return()">返回登录页</button>
+  </div>
+</div>
