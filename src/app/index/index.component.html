@@ -1,77 +1,89 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: Husiyuan
+ * @Date: 2020-06-23 20:59:44
+ * @LastEditors: Husiyuan
+ * @LastEditTime: 2020-06-23 21:05:39
+--> 
 <div class="wrapper">
-    <div class="treeNodesContainer">
-        <!-- 待选框 -->
-        <div class="indicators-panel-select-div">
-          <p>待选框</p>
-          <div style="padding:10px 20px;">
-            <!-- 待选框选项 -->
-            <div class="indicators-panel-tree-div">
-              <div class="tool-box-container">
-                <div class="tool-box">
-                  <nz-select class="multiple-select" [(ngModel)]="relatedGroupSelectedValue">
-                    <nz-option *ngFor="let option of relatedGroupOption" [nzLabel]="option" [nzValue]="option"></nz-option>
-                  </nz-select>
-                </div>
-                <div class="tool-box">
+  <div class="treeNodesContainer">
+    <!-- 待选框 -->
+    <div class="indicators-panel-select-div">
+      <p>待选框</p>
+      <div style="padding:10px 20px; height: calc(100% - 20px);">
+        <!-- 待选框选项 -->
+        <div class="indicators-panel-tree-div">
+          <div class="tool-box-container">
+            <nz-input-group [nzPrefix]="prefixIcon">
+              <input type="text" style="color:#58588a" nz-input placeholder="请输入搜索内容"
+                [(ngModel)]="waitSelectSearchValue">
+            </nz-input-group>
+            <ng-template #prefixIcon>
+              <i nz-icon nzType="search"></i>
+            </ng-template>
+          </div>
+          <div class="tree-container">
+            <nz-tree #waitSelectTreeCom [nzData]="waitSelectTreeNodes" nzCheckable="true" nzMultiple="true"
+              [nzSearchValue]="waitSelectSearchValue" [nzTreeTemplate]="waitTemplate" [nzExpandAll]='true'>
+            </nz-tree>
+            <ng-template #waitTemplate let-node>
+              <span class="custom-node" [class.active]="activedNode?.key === node.key">
+                <span *ngIf="!node.isLeaf">
+                  <span class="file-name" [ngClass]="{'font-highlight': waitSelectSearchValue === node.title}">{{ node.title }}</span>
+                </span>
+                <span *ngIf="node.isLeaf">
+                  <span class="file-name" [ngClass]="{'font-highlight': waitSelectSearchValue === node.title}">{{ node.title }}</span>
+                  <span class="folder-desc" *ngFor="let action of node.origin.actionType">{{ action }}</span>
+                </span>
+              </span>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="func">
+      <button (click)="transfer('select')">>></button>
+      <button (click)="transfer('unselect')">
+        <<</button> </div> <!-- 已选框 -->
+          <div class="indicators-panel-select-div">
+            <p>已选框
+              <!-- <span style="margin-left:220px;color:#fff;">已选
+          <span>{{selectedTreeNodes.length}}</span>
+        </span> -->
+            </p>
+            <div style="padding:10px 20px;">
+              <!-- 已选框选项 -->
+              <div class="indicators-panel-tree-div">
+                <div class="tool-box-container">
                   <nz-input-group [nzPrefix]="prefixIcon">
-                    <input type="text" style="color:#58588a" nz-input placeholder="请输入搜索内容"
-                      [(ngModel)]="waitSelectSearchValue">
+                    <input type="text" style="color:#58588a" nz-input placeholder="请输入搜索内容" [(ngModel)]="selectedSearchValue">
                   </nz-input-group>
                   <ng-template #prefixIcon>
                     <i nz-icon nzType="search"></i>
                   </ng-template>
                 </div>
-              </div>
-              <div class="tree-container">
-                <nz-tree #waitSelectTreeCom [nzData]="waitSelectTreeNodes" nzCheckable="true" nzMultiple="true"
-                  [nzSearchValue]="waitSelectSearchValue" [nzTreeTemplate]="actionTemplate" [nzExpandAll]='true'>
-                </nz-tree>
-                <ng-template #actionTemplate let-node>
-                  <span class="custom-node" [class.active]="activedNode?.key === node.key">
-                    <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event, menu)">
-                      <span class="folder-name">{{ node.title }}</span>
-                      <span class="folder-desc" *ngFor="let item of node.origin.actionType">{{ item }}</span>
+                <div class="tree-container">
+                  <nz-tree #selectedTreeCom [nzData]="selectedTreeNodes" nzCheckable="true" nzMultiple="true"
+                    [nzSearchValue]="selectedSearchValue" [nzTreeTemplate]="selectedTemplate" [nzExpandAll]='true'>
+                  </nz-tree>
+                  <ng-template #selectedTemplate let-node>
+                    <span class="custom-node" [class.active]="activedNode?.key === node.key">
+                      <span *ngIf="!node.isLeaf">
+                        <span class="file-name"
+                          [ngClass]="{'font-highlight': selectedSearchValue === node.title}">{{ node.title }}</span>
+                      </span>
+                      <span *ngIf="node.isLeaf">
+                        <span class="file-name"
+                          [ngClass]="{'font-highlight': selectedSearchValue === node.title}">{{ node.title }}</span>
+                        <span class="folder-desc"
+                          *ngFor="let action of node.origin.actionType">{{ action }}</span>
+                      </span>
                     </span>
-                    <span *ngIf="node.isLeaf" (contextmenu)="contextMenu($event, menu)">
-                      <span class="file-name">{{ node.title }}</span>
-                      <span class="folder-desc" *ngFor="let item of node.origin.actionType">{{ item }}</span>
-                    </span>
-                  </span>
-                </ng-template>
+                  </ng-template>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="func">
-            <button (click)="transfer('select')">>></button>
-            <button (click)="transfer('unselect')"><<</button> 
-        </div>
-        <!-- 已选框 -->
-        <div class="indicators-panel-select-div">
-          <p>已选框
-            <!-- <span style="margin-left:220px;color:#fff;">已选
-          <span>{{selectedTreeNodes.length}}</span>
-        </span> -->
-          </p>
-          <div style="padding:10px 20px;">
-            <!-- 已选框选项 -->
-            <div class="indicators-panel-tree-div">
-              <div class="tool-box-container">
-                <nz-input-group [nzPrefix]="prefixIcon">
-                  <input type="text" style="color:#58588a" nz-input placeholder="请输入搜索内容"
-                    (keyup)="sortArrayBySearch(selectedSearchValue)" [(ngModel)]="selectedSearchValue">
-                </nz-input-group>
-                <ng-template #prefixIcon>
-                  <i nz-icon nzType="search"></i>
-                </ng-template>
-              </div>
-              <div class="tree-container">
-                <nz-tree #selectedTreeCom [nzData]="selectedTreeNodes" nzCheckable="true" nzMultiple="true"
-                  [nzSearchValue]="selectedSearchValue" [nzTreeTemplate]="actionTemplate" [nzExpandAll]='true'>
-                </nz-tree>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-</div>
+    </div>
+  </div>

@@ -4,7 +4,7 @@
  * @Author: huangyueshi
  * @Date: 2020-06-16 10:55:25
  * @LastEditors: Husiyuan
- * @LastEditTime: 2020-06-19 21:29:31
+ * @LastEditTime: 2020-06-23 21:18:27
  */
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions } from 'ng-zorro-antd/core';
@@ -48,7 +48,7 @@ export class IndexComponent implements OnInit, OnDestroy, AfterViewInit {
           parentKey: '0',
           actionType: ['write'],
           children: [
-            { title: '租户删除', key: '1010', parentKey: '101', actionType: ['write', 'read', 'read', 'read'], isLeaf: true },
+            { title: '租户删除', key: '1010', parentKey: '101', actionType: ['write', 'read', 'read', 'read', 'read', 'read'], isLeaf: true },
             { title: '租户新增', key: '1011', parentKey: '101', actionType: ['write'], isLeaf: true }
           ]
         }
@@ -85,7 +85,7 @@ export class IndexComponent implements OnInit, OnDestroy, AfterViewInit {
           parentKey: '0',
           actionType: ['write'],
           children: [
-            { title: '租户删除', key: '1010', parentKey: '101', actionType: ['write', 'read', 'read', 'read'], isLeaf: true },
+            { title: '租户删除', key: '1010', parentKey: '101', actionType: ['write', 'read', 'read', 'read', 'read', 'read'], isLeaf: true },
             { title: '租户新增', key: '1011', parentKey: '101', actionType: ['write'], isLeaf: true }
           ]
         }
