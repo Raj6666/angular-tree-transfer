@@ -123,4 +123,20 @@ export class MyTreeService {
       }
     });
   }
+  /**
+   * @desc: 刷新树状态，选中指定节点
+   * @param： {nodes} 树节点
+   * @param： {keys} 需要选中的树节点key
+   * @return: null
+   */
+  treeChecked(nodes, keys) {
+    nodes.map(item => {
+      if (keys.includes(item.key)) {
+        item.checked = true;
+      }
+      if (item.children) {
+        this.treeChecked(item.children, keys);
+      }
+    });
+  }
 }

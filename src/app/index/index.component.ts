@@ -56,7 +56,8 @@ export class IndexComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   ];
   // 树形选择已选框的数据
-  selectedTreeNodes: NzTreeNodeOptions[] = [];
+  selectedTreeNodes: NzTreeNodeOptions[] = [
+  ];
   // 原始树结构数据
   originTreeNodes = [
     {
@@ -110,7 +111,52 @@ export class IndexComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
   }
 
+  // 模拟存在初始已选节点时的情况
   ngAfterViewInit() {
+    const treeNodes = [
+      {
+        title: '全部',
+        key: '0',
+        children: [
+          {
+            title: '模块',
+            key: '100',
+            parentKey: '0',
+            actionType: ['write', 'read'],
+            children: [
+              { title: '租户管理', key: '1000', parentKey: '100', actionType: ['write', 'read'], isLeaf: true },
+              {
+                title: '用户管理', key: '1002', parentKey: '100', actionType: ['write', 'read'], children: [
+                  { title: '大用户管理', key: '10021', parentKey: '1002', actionType: ['write', 'read'], isLeaf: true },
+                  { title: '小用户管理', key: '10022', parentKey: '1002', actionType: ['write', 'read'], isLeaf: true },
+                ]
+              },
+            ]
+          },
+          {
+            title: '按钮',
+            key: '101',
+            parentKey: '0',
+            actionType: ['write'],
+            children: [
+              { title: '租户新增', key: '1011', parentKey: '101', actionType: ['write'], isLeaf: true }
+            ]
+          }
+        ]
+      }
+    ];
+    this.myTreeService.convertTreeToArr(treeNodes);
+    // 获得已选叶子节点的key
+    const treeLeafKeys = this.myTreeService.treeNodeArray.filter(item => item.isLeaf).map(item => item.key);
+    // 待选树根据key选中节点
+    const waitNodes = JSON.parse(JSON.stringify(this.waitSelectTreeNodes));
+    this.myTreeService.treeChecked(waitNodes, treeLeafKeys);
+    this.waitSelectTreeNodes = waitNodes;
+    this.myTreeService.treeNodeArray = [];
+    // 模拟点击向右转移按钮
+    setTimeout(() => {
+      this.transfer('select');
+    }, 100);
   }
 
 
@@ -129,11 +175,14 @@ export class IndexComponent implements OnInit, OnDestroy, AfterViewInit {
     const combineArray = this.common.uniqueArr(sourceCheckedArr.concat(targetArr));
     this.myTreeService.convertTreeToArr(this.originTreeNodes);
     const arr = this.myTreeService.treeNodeArray;
-    for (let i = arr.length - 1; i >= 0; i --) {
+    const needNodes = []; // 所有需要的节点都要加入这个数组，用于逐层判断所有的节点是否都需要;因为如果只判断原始一维数组的话，只能拿到一层父节点;
+    for (let i = arr.length - 1; i >= 0; i--) {
       let need = false;
       combineArray.map(needItem => {
-        if (needItem.key === arr[i].key || needItem.parentKey === arr[i].key) {
+        if (needItem.key === arr[i].key || needItem.parentKey === arr[i].key ||
+            needNodes.some(item => item.key === arr[i].key || item.parentKey === arr[i].key)) {
           need = true;
+          needNodes.push(arr[i]);
         }
       });
       if (!need) {
